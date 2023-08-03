@@ -36,17 +36,17 @@ app.post('/items', (req, res) =>
   res.status(201)
 })
 
-app.update('/items', (req, res) =>
+app.patch('/items', (req, res) =>
 {
   if (!check_type(req)) res.status(400)
   // request to db, update need item
   res.status(201)
-}
+})
 
 app.delete('/items', (req, res) =>
 {
   if (!check_type(req)) res.status(400)
   // request to db, delete need item
   res.status(200)
-}
+})
 
