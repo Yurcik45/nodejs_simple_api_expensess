@@ -67,19 +67,19 @@ const execute_query_safety = db_err_handling_hoc(execute_query)
 
 const query_builder = ({ ...params }) =>
 ({
-  get_expenses:   `SELECT * FROM expensess`,
+  get_expenses:   `SELECT * FROM expenses`,
   get_benefits:   `SELECT * FROM benefits`,
-  add_expense:    `INSERT INTO expensess (name, sum, category, description)
+  add_expense:    `INSERT INTO expenses (name, sum, category, description)
                    VALUES ('${ params.name }', ${ params.sum }, '${ params.category }', '${ params.description }')`,
   add_benefit:    `INSERT INTO benefits (name, sum, category, description)
                    VALUES ('${ params.name }', ${ params.sum }, '${ params.category }', '${ params.description }')`,
-  patch_expense:  `UPDATE expensess
+  patch_expense:  `UPDATE expenses
                    SET name='${ params.name }', sum=${ params.sum }, category='${ params.category }', description='${ params.description }'
                    WHERE id=${ params.id }`,
   patch_benefit:  `UPDATE benefits
                    SET name='${ params.name }', sum=${ params.sum }, category='${ params.category }', description='${ params.description }'
                    WHERE id=${ params.id }`,
-  delete_expense: `DELETE FROM expensess
+  delete_expense: `DELETE FROM expenses
                    WHERE id=${ params.id }`,
   delete_benefit: `DELETE FROM benefits
                    WHERE id=${ params.id }`,

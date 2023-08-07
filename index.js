@@ -62,7 +62,7 @@ app.delete('/items', (req, res) =>
   const type = check_type(req)
   if (!type) return res.status(400).json("delete item failed")
   make_query(`delete_${ type.slice(0, -1) }`, req.body)
-  .then(() => { console.log("after delte ", type, " id", req.body.id); res.status(201).json("deleted") })
+  .then(() => res.status(201).json("deleted") )
   .catch(err => res.status(500).json(JSON.stringify(err.message)))
 })
 
