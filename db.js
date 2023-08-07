@@ -1,5 +1,5 @@
 const fs = require('fs')
-const utils = require('utils')
+const util = require('util')
 const { Pool } = require('pg')
 
 const readFileAsync = util.promisify(fs.readFile)
@@ -67,22 +67,24 @@ const execute_query_safety = db_err_handling_hoc(execute_query)
 
 const query_builder = ({ ...params }) =>
 ({
-  get_expensess: `GET * FROM expensess`,
-  get_benefits: `GET * FROM benefits`,
-  add_expense: `INSERT INTO expensess (name, sum, category, description)
-                VALUES ('${ params.name }', ${ params.sum }, '${ params.category }', '${ params.description }')`,
-  add_benefit: `INSERT INTO benefits (name, sum, category, description)
-                VALUES ('${ params.name }', ${ params.sum }, '${ params.category }', '${ params.description }')`,
-  patch_expense: `UPDATE expensess
-                  SET name='${ params.name }', sum=${ params.sum }, category='${ params.category }' description='${ params.description }'
-                  WHERE id=${ params.id }`,
-  patch_benefit: `UPDATE benefits
-                  SET name='${ params.name }', sum=${ params.sum }, category='${ params.category }' description='${ params.description }'
-                  WHERE id=${ params.id }`,
+  get_expenses:   `SELECT * FROM expensess`,
+  get_benefits:   `SELECT * FROM benefits`,
+  add_expense:    `INSERT INTO expensess (name, sum, category, description)
+                   VALUES ('${ params.name }', ${ params.sum }, '${ params.category }', '${ params.description }')`,
+  add_benefit:    `INSERT INTO benefits (name, sum, category, description)
+                   VALUES ('${ params.name }', ${ params.sum }, '${ params.category }', '${ params.description }')`,
+  patch_expense:  `UPDATE expensess
+                   SET name='${ params.name }', sum=${ params.sum }, category='${ params.category }', description='${ params.description }'
+                   WHERE id=${ params.id }`,
+  patch_benefit:  `UPDATE benefits
+                   SET name='${ params.name }', sum=${ params.sum }, category='${ params.category }', description='${ params.description }'
+                   WHERE id=${ params.id }`,
   delete_expense: `DELETE FROM expensess
                    WHERE id=${ params.id }`,
   delete_benefit: `DELETE FROM benefits
                    WHERE id=${ params.id }`,
+  get_categories: `SELECT * FROM categories`,
+  add_category:   `INSERT INTO categories (name) VALUES ('${ params.name }')`,
 })
 
 const make_query = async (query_type, params = {}, castom) =>
@@ -90,7 +92,7 @@ const make_query = async (query_type, params = {}, castom) =>
   console.log("make_query", { query_type, params, castom  })
   const possible_query_types = Object.keys(query_builder({}))
   if (!castom  && possible_query_types.indexOf(query_type) === -1) return
-  return await execute_query_safety(castom ?? game_query_builder(params)[query_type])
+  return await execute_query_safety(castom ?? query_builder(params)[query_type])
 }
 
 module.exports = {
